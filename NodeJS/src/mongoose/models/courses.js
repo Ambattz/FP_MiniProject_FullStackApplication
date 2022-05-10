@@ -25,8 +25,9 @@ const courseSchema = new mongoose.Schema({
   description: {
     type: String,
     required: true,
+    minLength: 3,
     validate(value) {
-      if (!value.match(/(?:[^!@#$%]+ ){2,14}[^!@#$%]+/)) {
+      if ((!value.match(/(?:[^!@#$%]+ ){2,14}[^!@#$%]+/)) || (str.split(' ').filter(function (n) { return n != '' }).length < 3)) {
         throw new Error(
           "Course description should have a length of atleast 3 words"
         );

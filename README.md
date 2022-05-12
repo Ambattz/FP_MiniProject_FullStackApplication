@@ -34,6 +34,5 @@ Note
 ![2022-05-11 (2)](https://user-images.githubusercontent.com/69767685/167886248-7b736297-f7e5-421f-a108-99ae33d8ddfa.png) |![2022-05-12 (2)](https://user-images.githubusercontent.com/69767685/167945987-b6acf1c1-0835-4277-982f-b51fbca0d28c.png)
 
 ## RESULT
-![2022-05-12](https://user-images.githubusercontent.com/69767685/167945921-700d24c2-8621-4062-a2f7-884de83263e2.png)
-
+![2022-05-12 (7)](https://user-images.githubusercontent.com/69767685/168075477-d44ddd0d-2c41-45ae-a4aa-005331c84659.png)
 Test Cases passed successfully.

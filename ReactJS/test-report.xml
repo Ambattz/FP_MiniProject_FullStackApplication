@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite id="0" name="D:\Study\MERN\FP_MiniProject_FullStackApplication\ReactJS\src\App.test.js" errors="0" package="D:\Study\MERN\FP_MiniProject_FullStackApplication\ReactJS\src\App.test.js" hostname="localhost" tests="5" failures="0" time="3.76" timestamp="2022-05-12T12:28:59">
+    <properties>
+    </properties>
+    <testcase classname="App component" name="routes check" time="0">
+    </testcase>
+    <testcase classname="App component" name="data map check" time="0">
+    </testcase>
+    <testcase classname="App component" name="Add rating Check" time="0">
+    </testcase>
+    <testcase classname="App component" name="Apply check" time="0">
+    </testcase>
+    <testcase classname="App component" name="drop rating Check" time="0">
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

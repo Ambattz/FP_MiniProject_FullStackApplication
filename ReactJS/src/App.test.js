@@ -19,7 +19,7 @@ describe("App component", () => {
     window.alert = jest.fn();
 
     component = shallow(
-      <App/>
+      <App />
     )
   });
 
@@ -27,7 +27,7 @@ describe("App component", () => {
     jest.clearAllMocks();
   });
 
-  it("routes check" , async () => {
+  it("routes check", async () => {
     expect(global.fetch).toHaveBeenCalledTimes(1);
     expect(global.fetch).toHaveBeenCalledWith(
       "http://localhost:8001/courses/get"
@@ -35,7 +35,7 @@ describe("App component", () => {
     global.fetch.mockClear();
   })
 
-  it("data map check" , () => {
+  it("data map check", () => {
     const data = [
       {
         _id: "5ff5706baf74d71378df935f",
@@ -71,7 +71,7 @@ describe("App component", () => {
         rating: 4.1,
       }
     ]
-    component.instance().setState({data})
+    component.instance().setState({ data })
 
     expect(component.find("ul").at(0).find("li").at(0).text()).toBe("Node.js")
     expect(component.find("ul").at(0).find("li").at(1).text()).toBe("WD")
@@ -89,7 +89,7 @@ describe("App component", () => {
     expect(component.find("ul").at(2).find("li").at(4).text()).toBe("18 hrs . 10 Ratings . 4.1/5")
   })
 
-  it("Add rating Check" , () => {
+  it("Add rating Check", () => {
     const data = [
       {
         _id: "5ff5706baf74d71378df935f",
@@ -103,11 +103,11 @@ describe("App component", () => {
         rating: 4.5,
       }
     ]
-    component.instance().setState({data})
-  
+    component.instance().setState({ data })
+
     const addRating = component.find("ul").at(0).find("li").at(3).find("li").at(0).find(".rate").find("button")
     addRating.simulate("click")
-    component.find(".rating").simulate("change" , { target: {name: "rating" , value: 5 } });
+    component.find(".rating").simulate("change", { target: { name: "rating", value: 5 } });
     expect(component.state().rating).toBe(5)
 
     //patch
@@ -117,15 +117,15 @@ describe("App component", () => {
     expect(global.fetch).toHaveBeenCalledTimes(3);
     expect(global.fetch).toHaveBeenCalledWith(
       "http://localhost:8001/courses/rating/5ff5706baf74d71378df935f", {
-          "method": "PATCH",
-          "headers": {"Content-Type": "application/json"},
-          "body": "{\"rating\":1}",
-        }
+      "method": "PATCH",
+      "headers": { "Content-Type": "application/json" },
+      "body": "{\"rating\":1}",
+    }
     );
     global.fetch.mockClear();
   })
 
-  it("Apply check" , async () => {
+  it("Apply check", async () => {
     const data = [
       {
         _id: "5ff5706baf74d71378df935f",
@@ -139,7 +139,7 @@ describe("App component", () => {
         rating: 4.5,
       }
     ]
-    component.instance().setState({data})
+    component.instance().setState({ data })
 
     const apply = component.find("ul").at(0).find("li").at(3).find(".btn")
     apply.simulate("click")
@@ -149,9 +149,9 @@ describe("App component", () => {
     expect(global.fetch).toHaveBeenCalledTimes(5);
     expect(global.fetch).toHaveBeenCalledWith(
       "http://localhost:8001/courses/enroll/5ff5706baf74d71378df935f", {
-          "method": "post",
-          "headers": {"Content-Type": "application/json"},
-        }
+      "method": "post",
+      "headers": { "Content-Type": "application/json" },
+    }
     );
     let spy1 = jest.spyOn(component.instance(), "handleGetData");
     spy1()
@@ -159,7 +159,7 @@ describe("App component", () => {
     global.fetch.mockClear();
   })
 
-  it("drop rating Check" , () => {
+  it("drop rating Check", () => {
     const data = [
       {
         _id: "5ff5706baf74d71378df935f",
@@ -173,7 +173,7 @@ describe("App component", () => {
         rating: 4.5,
       }
     ]
-    component.instance().setState({data})
+    component.instance().setState({ data })
 
     const addRating = component.find("ul").at(0).find("li").at(3).find(".drop")
     addRating.simulate("click")
@@ -186,9 +186,9 @@ describe("App component", () => {
     expect(global.fetch).toHaveBeenCalledTimes(3);
     expect(global.fetch).toHaveBeenCalledWith(
       "http://localhost:8001/courses/drop/5ff5706baf74d71378df935f", {
-          "method": "DELETE",
-          "headers": {"Content-Type": "application/json"},
-        }
+      "method": "DELETE",
+      "headers": { "Content-Type": "application/json" },
+    }
     );
     window.alert.mockClear();
     global.fetch.mockClear();

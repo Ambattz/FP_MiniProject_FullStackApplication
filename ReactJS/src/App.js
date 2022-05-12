@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import "./App.css"
 
-
-
 class Home extends Component {
+
   state = {
     show: false,
     data: [],
@@ -12,61 +11,37 @@ class Home extends Component {
   componentDidMount = () => {
     // Write your code here
     this.handleGetData();
-    this.timer = setInterval(() => this.handleGetData(), 30000);
   }
 
-  componentWillUnmount() {
-    clearInterval(this.timer);
-    this.timer = null;
-  }
-
-  handleGetData = () => {
+  handleGetData = async () => {
     // Write your code here
-    this.setState({ ...this.state, show: true });
-    fetch("/courses/get")
-      .then(response => response.json())
-      .then(result => {
-        this.setState({ data: result, show: false })
-      })
-      .catch(e => {
-        console.log(e);
-        this.setState({ ...this.state, show: false });
-      });
-  };
+    const fetchPromise = await fetch("http://localhost:8001/courses/get");
+    const data = await fetchPromise.json();
+    this.setState({ data: data, show: true })
+  }
 
   handleApply = async (id) => {
     // Write your code here
-    this.state.data[id].isApplied = true;
-    this.setState({
-      ...this.state,
-      data: this.state.data
-    })
-    var url = '/courses/enroll/' + this.state.data[id]["_id"];
+    var url = 'http://localhost:8001/courses/enroll/' + id;
     const requestOptions = {
-      method: 'POST',
+      method: 'post',
       headers: { 'Content-Type': 'application/json' },
     };
-    fetch(url, requestOptions)
-      .then(response => response.json())
-      .then(data => alert(data["message"]));
+    const fetchPromise = await fetch(url, requestOptions)
+    const data = await fetchPromise.json();
+    alert(data["message"]);
+    this.handleGetData();
   };
 
   handleRating = (e) => {
     // Write your code here
-    this.setState({ rating: e.target.value });
+    this.setState({ rating: e.target.value }, () => {
+    });
   }
 
   handleAddRating = async (id) => {
     // Write your code here
-    this.state.data[id].isRated = true;
-    this.state.data[id].noOfRatings = this.state.data[id].noOfRatings + 1;
-    this.state.data[id].rating = (((this.state.data[id].rating * this.state.data[id].noOfRatings) + this.state.rating) / (this.state.data[id].noOfRatings + 1)).toFixed(1)
-
-    this.setState({
-      ...this.state,
-      data: this.state.data
-    })
-    var url = '/courses/rating/' + this.state.data[id]["_id"];
+    var url = 'http://localhost:8001/courses/rating/' + id;
     const requestOptions = {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -74,32 +49,24 @@ class Home extends Component {
         "rating": this.state.rating
       })
     };
-    fetch(url, requestOptions)
-      .then(response => response.json())
-      .then(data => {
-        alert(data["message"]);
-        this.handleGetData();
-      });
+    const Promise = await fetch(url, requestOptions)
+    const da = await Promise.json();
+    alert(da["message"]);
+    this.handleGetData();
   }
 
   handleDrop = async (id) => {
     // Write your code here
-    this.state.data[id].isApplied = false;
-    this.setState({
-      ...this.state,
-      data: this.state.data
-    })
-    var url = '/courses/drop/' + this.state.data[id]["_id"];
+    var url = 'http://localhost:8001/courses/drop/' + id;
     const requestOptions = {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
     };
-    fetch(url, requestOptions)
-      .then(response => response.json())
-      .then(data => alert(data["message"]));
+    const fetchPromise = await fetch(url, requestOptions)
+    const data = await fetchPromise.json();
+    alert(data["message"]);
+    this.handleGetData();
   }
-
-
 
   render() {
     return (
@@ -107,8 +74,9 @@ class Home extends Component {
         <header>
           <h2>ABC Learning</h2>
         </header>
+
         {
-          this.state.show ? "Fetching DATA" :
+          !this.state.show || !this.state.data ? "Fetching DATA" :
             this.state.data.map(
               (course, index) => (
                 <div className="cardContainer" key={index}>
@@ -118,43 +86,51 @@ class Home extends Component {
                         <li>{course.courseName}</li>
                         <li>{course.courseDept}</li>
                         <li>{course.description}</li>
-                        {
-                          course.isApplied ?
-                            (
-                              <li>
-                                {
-                                  !course.isRated ?
-                                    (
-                                      <li> Rate :
-                                        <select className="rating" name="rating" onChange={(e) => { this.handleRating(e) }}>
-                                          <option>1</option>
-                                          <option>2</option>
-                                          <option>3</option>
-                                          <option>4</option>
-                                          <option>5</option>
-                                        </select>
-                                        <button className="rate" onClick={() => { this.handleAddRating(index) }}>Add</button>
-                                      </li>
-                                    ) :
-                                    []
-                                }
-                                <button className="drop" onClick={() => { this.handleDrop(index) }}>Drop Course</button>
-                              </li>
-                            ) :
-                            (
-                              <li><button className="btn" onClick={() => { this.handleApply(index) }}>Apply</button></li>
-                            )
-                        }
+                        {course.isApplied ?
+                          (<li>
+                            {
+                              !course.isRated &&
+                              (<li>Rate:
+                                <select
+                                  className="rating"
+                                  name="rating"
+                                  onChange={(e) => { this.handleRating(e) }}>
+                                  <option>1</option>
+                                  <option>2</option>
+                                  <option>3</option>
+                                  <option>4</option>
+                                  <option>5</option>
+                                </select>
+                                <button className="rate"
+                                  onClick={() => {
+                                    this.handleAddRating(this.state.data[index]["_id"]);
+                                  }}> Add</button>
+                              </li>)
+                            }
+                            <button
+                              className="drop"
+                              onClick={() => {
+                                this.handleDrop(this.state.data[index]["_id"]);
+                              }}>Drop Course</button>
+                          </li>) :
+                          (<li>
+                            <button
+                              className="btn"
+                              onClick={() => {
+                                this.handleApply(this.state.data[index]["_id"]);
+                              }}>Apply</button>
+                          </li>)}
                       </div>
                       <div className="footer">
                         <li>{course.duration} hrs . {course.noOfRatings} Ratings . {course.rating}/5</li>
                       </div>
                     </ul>
-                  </div >
+                  </div>
                 </div >
               )
             )
         }
+
       </div>
     );
   }
